@@ -1,0 +1,76 @@
+Public Class Form1
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        Dim StrWoord As String
+        Dim objRandom As New Random
+        Dim intTeller As Integer
+        Dim arraWoorden(3) As String '0 isn't use
+        Dim intwrongguess As Integer = 0
+        Dim intRandom As Integer
+        Dim blnPresent As Boolean
+        Dim chrGuesbox As Char
+        Const cstrLetters As String = "abcdefghijklmnopqrstuvwxyz"
+
+        lblWord.Text = String.Empty
+        PicPicture.Visible = False
+        lstLetters.Items.Clear()
+
+        intRandom = objRandom.Next(1, 4)
+
+        arraWoorden(1) = "pet"
+        arraWoorden(2) = "house"
+        arraWoorden(3) = "gang"
+
+        Strwoord = arraWoorden(intRandom)
+
+        Select Case intRandom
+            Case Is = 1
+                Me.lblWord.Text = "......."
+            Case Is = 2
+                Me.lblWord.Text = "......."
+            Case Is = 3
+                Me.lblWord.Text = "........"
+        End Select
+
+        Strwoord.ToCharArray()
+
+        Do
+            chrGuesbox = InputBox("Give a letter from a - z? And try to find the correct word").ToLower
+
+            If InStr(cstrLetters, chrGuesbox) = 0 Then
+                MessageBox.Show("You can only use letters!!")
+            Else
+                If lstLetters.Items.Contains(chrGuesbox) = False Then
+                    blnPresent = False
+                    lstLetters.Items.Add(chrGuesbox)
+
+                    For intTeller = 0 To Integer.Parse(arraWoorden(intRandom).Length - 1) Step 1
+
+                        If StrWoord(intTeller) = chrGuesbox Then
+                            Me.lblWord.Text = lblWord.Text.Remove(intTeller, 1)
+                            Me.lblWord.Text = lblWord.Text.Insert(intTeller, chrGuesbox)
+                            blnPresent = True
+                        End If
+
+                    Next
+
+                    If blnPresent = False Then
+                        PicPicture.Visible = True
+                        PicPicture.Image = ImgHangman.Images(intwrongguess)
+                        intwrongguess += 1 'or intWrongguess = intWrongguess  + 1
+                    End If
+                Else
+                    MessageBox.Show("Letter already used before. Choose another one")
+                End If
+            End If
+        Loop Until lblWord.Text = arraWoorden(intRandom) Or intwrongguess = 2
+
+        If intwrongguess = 2 Then
+            MessageBox.Show("You Lost the game. To play again press the button. The word you had to find was" & arraWoorden(intRandom).ToString, "Lost")
+        Else
+            If lblWord.Text = arraWoorden(intRandom) Then
+                MessageBox.Show("You Won this Game. Congratulations")
+            End If
+        End If
+    End Sub
+End Class
